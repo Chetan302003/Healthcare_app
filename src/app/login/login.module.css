@@ -1,0 +1,43 @@
+.container {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    justify-content: center;
+    background-color: var(--background);
+}
+
+.title {
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    margin-bottom: 2rem;
+}
+
+.form {
+    margin-bottom: 2rem;
+}
+
+.footer {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.demoSection {
+    margin-top: auto;
+    padding-top: 2rem;
+    border-top: 1px solid #E5E7EB;
+}
+
+.demoSection p {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+}

@@ -1,0 +1,44 @@
+.navContainer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--surface);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0.75rem 0.5rem;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+    border-top-left-radius: var(--radius-lg);
+    border-top-right-radius: var(--radius-lg);
+    z-index: 50;
+}
+
+.navItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    width: 60px;
+}
+
+.icon {
+    margin-bottom: 2px;
+    transition: all var(--transition-fast);
+}
+
+.label {
+    font-size: 0.65rem;
+    font-weight: 500;
+}
+
+.active {
+    color: var(--primary);
+}
+
+.active .icon {
+    transform: translateY(-2px);
+}

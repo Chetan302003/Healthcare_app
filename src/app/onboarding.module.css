@@ -1,0 +1,71 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: space-between;
+    padding: 2rem;
+    background-color: var(--background);
+}
+
+.iconWrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mainIcon {
+    filter: drop-shadow(0 0 20px rgba(123, 97, 255, 0.4));
+}
+
+.content {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.title {
+    color: var(--text-main);
+}
+
+.desc {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+}
+
+.dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 2rem;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #D1D5DB;
+    transition: all var(--transition-fast);
+}
+
+.activeDot {
+    background-color: var(--primary);
+    width: 24px;
+    border-radius: 4px;
+}
+
+.footer {
+    margin-bottom: 2rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,66 +1,50 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.js file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import css from './onboarding.module.css';
+import { Activity } from 'lucide-react';
+
+const slides = [
+    { title: 'Digital Health Wallet', desc: 'Manage your health, medicines, and medical records securely in one place.' },
+    { title: 'Smart Reminders', desc: 'Never miss a dose with our intelligent medication tracking system.' },
+    { title: 'Weekly Reports', desc: 'Visualize your health progress effortlessly.' },
+];
+
+export default function Onboarding() {
+    const [step, setStep] = useState(0);
+    const router = useRouter();
+
+    const handleNext = () => {
+        if (step < slides.length - 1) {
+            setStep(step + 1);
+        } else {
+            router.push('/login');
+        }
+    };
+
+    return (
+        <div className={css.container}>
+            <div className={css.iconWrapper}>
+                <Activity size={48} className={css.mainIcon} color="var(--primary)" />
+            </div>
+
+            <div className={css.content}>
+                <h1 className={css.title}>{slides[step].title}</h1>
+                <p className={css.desc}>{slides[step].desc}</p>
+
+                <div className={css.dots}>
+                    {slides.map((_, i) => (
+                        <div key={i} className={`${css.dot} ${i === step ? css.activeDot : ''}`} />
+                    ))}
+                </div>
+            </div>
+
+            <div className={css.footer}>
+                <button className="btn btn-primary" onClick={handleNext}>
+                    {step === slides.length - 1 ? 'Get Started' : 'Next'}
+                </button>
+            </div>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+    );
 }

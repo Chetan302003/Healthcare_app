@@ -1,0 +1,90 @@
+.container {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    justify-content: center;
+    background-color: var(--background);
+}
+
+.title {
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    margin-bottom: 2rem;
+    color: var(--text-muted);
+}
+
+.roleGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.roleCard {
+    background-color: var(--surface);
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-sm);
+}
+
+.roleCard:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.roleCard h3 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.roleCard p {
+    font-size: 0.875rem;
+}
+
+.iconWrap {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.iconPatient {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: #2563EB;
+}
+
+.iconGuardian {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #10B981;
+}
+
+.iconDoctor {
+    background-color: rgba(123, 97, 255, 0.1);
+    color: #7B61FF;
+}
+
+.form {
+    margin-bottom: 2rem;
+}
+
+.row {
+    display: flex;
+    width: 100%;
+}
+
+.link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
