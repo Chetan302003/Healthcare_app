@@ -102,7 +102,7 @@ export default function Medicines() {
                     <div className={css.emptyState}>No medicines built yet.</div>
                 ) : (
                     medicines.map(med => (
-                        <div key={med._id} className={css.medCard} onClick={() => handleUpdateStatus(med._id, med.status)}>
+                        <div key={med.id} className={css.medCard} onClick={() => handleUpdateStatus(med.id, med.status)}>
                             <div className={css.medInfo}>
                                 <div className={css.medTime}>{med.time}</div>
                                 <div>

@@ -54,12 +54,17 @@ export default function Dashboard() {
                         <h2 className={css.name}>{user?.fullName || 'User'}</h2>
                     </div>
                 </div>
-                <button className={css.iconBtn}><Bell size={24} /></button>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                    <button className={css.iconBtn} onClick={() => router.push('/search')}><Search size={20} /></button>
+                    <button className={css.iconBtn} onClick={() => router.push('/messages')}><Bell size={20} /></button>
+                    <button className={css.iconBtn} onClick={() => router.push('/settings')}>Settings</button>
+                    <button className={css.iconBtn} onClick={() => router.push('/notifications')}>Alerts</button>
+                </div>
             </header>
 
-            <div className={css.searchBar}>
+            <div className={css.searchBar} onClick={() => router.push('/search')} style={{ cursor: 'pointer' }}>
                 <Search size={20} className={css.searchIcon} />
-                <input type="text" placeholder="Search doctor, medicines..." className={css.searchInput} />
+                <input type="text" placeholder="Search doctor, medicines..." className={css.searchInput} readOnly style={{ pointerEvents: 'none' }} />
             </div>
 
             <div className={css.statsGrid}>
@@ -85,7 +90,7 @@ export default function Dashboard() {
                     <div className={css.emptyState}>No medicines for today.</div>
                 ) : (
                     medicines.map(med => (
-                        <div key={med._id} className={css.medCard}>
+                        <div key={med.id} className={css.medCard}>
                             <div className={css.medInfo}>
                                 <div className={css.medTime}>{med.time}</div>
                                 <div>

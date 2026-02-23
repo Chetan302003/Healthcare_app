@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
-import connectToDatabase from '@/lib/mongodb';
-import User from '@/models/User';
+import { supabase } from '@/lib/supabase';
 import { jwtVerify } from 'jose';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_key_for_dev';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 export async function GET(req) {
     try {
@@ -16,12 +15,17 @@ export async function GET(req) {
         const secret = new TextEncoder().encode(JWT_SECRET);
         const { payload } = await jwtVerify(token, secret);
 
-        await connectToDatabase();
-        const user = await User.findById(payload.userId);
+        const { data: userRaw } = await supabase
+            .from('users')
+            .select('id, email, role, fullname, phone, age, gender')
+            .eq('id', payload.userId)
+            .maybeSingle();
 
-        if (!user) {
+        if (!userRaw) {
             return NextResponse.json({ message: 'User not found' }, { status: 404 });
         }
+
+        const user = { ...userRaw, fullName: userRaw.fullname };
 
         return NextResponse.json({ user }, { status: 200 });
     } catch (error) {

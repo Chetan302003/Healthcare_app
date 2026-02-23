@@ -1,22 +1,24 @@
 import { NextResponse } from 'next/server';
-import connectToDatabase from '@/lib/mongodb';
-import User from '@/models/User';
+import { supabase } from '@/lib/supabase';
 import bcrypt from 'bcryptjs';
 import { SignJWT } from 'jose';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_key_for_dev';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 export async function POST(req) {
     try {
-        await connectToDatabase();
-
         const { email, password } = await req.json();
 
         if (!email || !password) {
             return NextResponse.json({ message: 'Missing email or password' }, { status: 400 });
         }
 
-        const user = await User.findOne({ email }).select('+password');
+        const { data: user } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', email)
+            .maybeSingle();
+
         if (!user) {
             return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 });
         }
@@ -28,7 +30,7 @@ export async function POST(req) {
 
         // Create a JWT
         const secret = new TextEncoder().encode(JWT_SECRET);
-        const token = await new SignJWT({ userId: user._id, role: user.role })
+        const token = await new SignJWT({ userId: user.id, role: user.role })
             .setProtectedHeader({ alg: 'HS256' })
             .setIssuedAt()
             .setExpirationTime('24h')
@@ -37,10 +39,10 @@ export async function POST(req) {
         const response = NextResponse.json({
             message: 'Logged in successfully',
             user: {
-                id: user._id,
+                id: user.id,
                 email: user.email,
                 role: user.role,
-                fullName: user.fullName
+                fullName: user.fullname
             }
         }, { status: 200 });
 

@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
-import connectToDatabase from '@/lib/mongodb';
-import Medication from '@/models/Medication';
+import { supabase } from '@/lib/supabase';
 import { jwtVerify } from 'jose';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_key_for_dev';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 async function getUserId(req) {
     const token = req.cookies.get('token')?.value;
@@ -24,8 +23,6 @@ export async function PATCH(req, { params }) {
             return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
         }
 
-        await connectToDatabase();
-
         // Await params because Next.js 15 requires awaiting dynamic route params
         const { id } = await params;
 
@@ -35,18 +32,22 @@ export async function PATCH(req, { params }) {
             return NextResponse.json({ message: 'Invalid status' }, { status: 400 });
         }
 
-        const medication = await Medication.findOneAndUpdate(
-            { _id: id, patientId: userId },
-            { status },
-            { new: true }
-        );
+        const { data: medication, error } = await supabase
+            .from('medications')
+            .update({ status })
+            .eq('id', id)
+            .eq('patientid', userId)
+            .select()
+            .single();
 
-        if (!medication) {
+        if (error) {
+            console.error('Error updating medication:', error);
             return NextResponse.json({ message: 'Medication not found or unauthorized' }, { status: 404 });
         }
 
         return NextResponse.json({ message: 'Status updated', medication }, { status: 200 });
     } catch (error) {
+        console.error('Medicines PATCH error:', error);
         return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
     }
 }
