@@ -28,15 +28,31 @@ CREATE TABLE IF NOT EXISTS medications (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- 4. Create Medical Records Table (Module 1 & 2)
+CREATE TABLE IF NOT EXISTS medical_records (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    patient_id UUID REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    title TEXT NOT NULL,
+    category TEXT CHECK (category IN ('Lab Report', 'Prescription', 'Discharge Summary', 'Other')),
+    file_url TEXT NOT NULL,
+    doctor_name TEXT,
+    highlights JSONB,
+    date TIMESTAMPTZ DEFAULT NOW(),
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Disable RLS since we use a custom JWT API auth system securely instead
 ALTER TABLE users DISABLE ROW LEVEL SECURITY;
 ALTER TABLE medications DISABLE ROW LEVEL SECURITY;
+ALTER TABLE medical_records DISABLE ROW LEVEL SECURITY;
 
 -- Grant API access to the Anon key so custom authentication from the server can access DB
 GRANT ALL ON users TO anon;
 GRANT ALL ON medications TO anon;
+GRANT ALL ON medical_records TO anon;
 GRANT ALL ON users TO authenticated;
 GRANT ALL ON medications TO authenticated;
+GRANT ALL ON medical_records TO authenticated;
 
 -- 4. Insert Sample Database Data
 -- Inserting a default Doctor and a Patient. 

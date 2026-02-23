@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import css from './dashboard.module.css';
-import { Bell, Search, Activity, Heart, ChevronRight, CheckCircle2, Clock, Plus } from 'lucide-react';
+import { Bell, Search, Activity, Heart, ChevronRight, CheckCircle2, Clock, Plus, Bot } from 'lucide-react';
 
 export default function Dashboard() {
     const [user, setUser] = useState(null);
@@ -26,8 +26,7 @@ export default function Dashboard() {
                 const medRes = await fetch('/api/medicines');
                 if (medRes.ok) {
                     const medData = await medRes.json();
-                    // Filter only pending or taken today
-                    setMedicines(medData.medications.slice(0, 3));
+                    setMedicines(medData.medications);
                 }
             } catch (err) {
                 console.error(err);
@@ -42,7 +41,30 @@ export default function Dashboard() {
         return <div className="flex justify-center items-center" style={{ minHeight: '80vh' }}><Activity className="animate-spin" color="var(--primary)" /></div>;
     }
 
-    const pendingMeds = medicines.filter(m => m.status === 'Pending').length;
+    const totalDoses = medicines.length;
+    const totalTaken = medicines.filter(m => m.status === 'Taken').length;
+    const adherence = totalDoses > 0 ? Math.round((totalTaken / totalDoses) * 100) : 100;
+
+    let riskLevel = 'Good';
+    let riskColor = '#10B981';
+    let riskBg = 'rgba(16, 185, 129, 0.1)';
+
+    if (totalDoses === 0) {
+        riskLevel = 'No Data';
+        riskColor = '#6B7280';
+        riskBg = 'rgba(107, 114, 128, 0.1)';
+    } else if (adherence < 70) {
+        riskLevel = 'High Risk';
+        riskColor = '#EF4444';
+        riskBg = 'rgba(239, 68, 68, 0.1)';
+    } else if (adherence < 90) {
+        riskLevel = 'Moderate';
+        riskColor = '#F59E0B';
+        riskBg = 'rgba(245, 158, 11, 0.1)';
+    }
+
+    const todaysMeds = medicines.slice(0, 3);
+    const pendingMeds = todaysMeds.filter(m => m.status === 'Pending').length;
 
     return (
         <div className={css.container}>
@@ -69,14 +91,14 @@ export default function Dashboard() {
 
             <div className={css.statsGrid}>
                 <div className={css.statCard}>
-                    <div className={`${css.statIconWrap} ${css.bgBlue}`}><Activity size={24} color="#2563EB" /></div>
-                    <h3>Heart Rate</h3>
-                    <p>78 <span>bpm</span></p>
+                    <div className={css.statIconWrap} style={{ backgroundColor: riskBg }}><Activity size={24} color={riskColor} /></div>
+                    <h3>Adherence</h3>
+                    <p style={{ color: riskColor }}>{adherence}<span>%</span></p>
                 </div>
                 <div className={css.statCard}>
-                    <div className={`${css.statIconWrap} ${css.bgRed}`}><Heart size={24} color="#EF4444" /></div>
-                    <h3>Blood Press</h3>
-                    <p>120/80</p>
+                    <div className={css.statIconWrap} style={{ backgroundColor: riskBg }}><Heart size={24} color={riskColor} /></div>
+                    <h3>Risk Level</h3>
+                    <p style={{ fontSize: '1.25rem', color: riskColor, marginTop: '0.5rem' }}>{riskLevel}</p>
                 </div>
             </div>
 
@@ -86,10 +108,10 @@ export default function Dashboard() {
             </div>
 
             <div className={css.medList}>
-                {medicines.length === 0 ? (
+                {todaysMeds.length === 0 ? (
                     <div className={css.emptyState}>No medicines for today.</div>
                 ) : (
-                    medicines.map(med => (
+                    todaysMeds.map(med => (
                         <div key={med.id} className={css.medCard}>
                             <div className={css.medInfo}>
                                 <div className={css.medTime}>{med.time}</div>
@@ -109,8 +131,17 @@ export default function Dashboard() {
                 )}
             </div>
 
-            <button className={css.addBtn} onClick={() => router.push('/medicines')}>
-                <Plus size={20} /> Add Medicine
+            <div style={{ display: 'flex', gap: '10px', marginTop: '1rem' }}>
+                <button className={css.addBtn} style={{ flex: 1, marginTop: 0 }} onClick={() => router.push('/medicines')}>
+                    <Plus size={20} /> Add Medicine
+                </button>
+                <button className={css.addBtn} style={{ flex: 1, marginTop: 0, backgroundColor: 'transparent', color: 'var(--primary)', border: '1px solid var(--primary)' }} onClick={() => router.push('/wallet')}>
+                    Medical Records
+                </button>
+            </div>
+
+            <button className={css.addBtn} style={{ marginTop: '10px', backgroundColor: 'var(--primary)', color: 'white', border: 'none' }} onClick={() => router.push('/assistant')}>
+                <Bot size={20} /> Ask AI Assistant
             </button>
 
         </div>

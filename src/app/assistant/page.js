@@ -10,22 +10,35 @@ export default function Assistant() {
     ]);
     const [input, setInput] = useState('');
 
-    const handleSend = (e) => {
+    const handleSend = async (e) => {
         e.preventDefault();
         if (!input.trim()) return;
 
-        const newMsg = { id: Date.now(), text: input, isBot: false };
+        const currInput = input;
+        const newMsg = { id: Date.now(), text: currInput, isBot: false };
         setMessages(prev => [...prev, newMsg]);
         setInput('');
 
-        // Simulate AI response
-        setTimeout(() => {
+        try {
+            const res = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: currInput })
+            });
+            const data = await res.json();
+
             setMessages(prev => [...prev, {
                 id: Date.now() + 1,
-                text: "I'm a demo assistant, but in a real app I would analyze your medical query and provide insights based on your Health Wallet documents.",
+                text: data.reply,
                 isBot: true
             }]);
-        }, 1000);
+        } catch (err) {
+            setMessages(prev => [...prev, {
+                id: Date.now() + 1,
+                text: "Network error connecting to AI.",
+                isBot: true
+            }]);
+        }
     };
 
     const suggestions = [
