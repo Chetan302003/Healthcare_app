@@ -1,0 +1,18 @@
+{
+  "output": [
+    "--- STARTING COMPREHENSIVE E2E TESTS ---",
+    "\n[1/6] Registering user: testuser_1771870598246@test.com...",
+    "✅ Registration successful (User ID: bf8a85fc-3e5c-473f-9d87-b2d084656407)",
+    "\n[2/6] Logging in...",
+    "✅ Login successful (Retrieved JWT Auth Cookie)",
+    "\n[3/6] Adding new medication...",
+    "✅ Medication added successfully (ID: 5c86babc-b5d3-4b0d-9669-d19aba63d1a0)",
+    "\n[4/6] Marking medication as 'Taken' to test adherence...",
+    "✅ Medication marked as Taken.",
+    "\n[5/6] Testing Mental Health Chatbot API...",
+    "✅ Chatbot active. Reply received: \"I'm sorry you're feeling this way. High stress can affect your physical health. Try a 4-7-8 breathing exercise: inhale for 4 seconds, hold for 7, exhale for 8. Would you like me to recommend a journaling exercise?\"",
+    "\n[6/6] Testing Medical Records File Upload to Supabase...",
+    "✅ Medical Record uploaded successfully! Highlights extracted: {\"Platelets\":\"Normal (250 K/uL)\",\"WBC Count\":\"Normal (7.5 K/uL)\",\"Hemoglobin\":\"Low (9.2 g/dL)\"}",
+    "\n--- TESTS COMPLETED SUCCESSFULLY ---"
+  ]
+}
